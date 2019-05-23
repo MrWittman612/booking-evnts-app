@@ -7,7 +7,7 @@ const graphQlSchema = require('./graphql/schema/index');
 const graphQlResolvers = require('./graphql/resolvers/index');
 const isAuth = require('./middleware/is-auth');
 
-const port = process.env.PORT || 5600;
+const port = process.env.PORT || 8000;
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(isAuth);
 
 app.use(
 	'/graphql',
-	graphqlHttp({
+	graphqlHTTP({
 		schema: graphQlSchema,
 		rootValue: graphQlResolvers,
 		graphiql: true
@@ -38,7 +38,9 @@ mongoose
 	.connect(
 		`mongodb+srv://${process.env.MONGO_USER}:${
 			process.env.MONGO_PASSWORD
-		}cluster0-lffrm.mongodb.net/test?retryWrites=true`
+		}cluster0-lffrm.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`,
+		{ useNewUrlParser: true },
+		() => console.log('MongoDB is connected')
 	)
 	.then(() => {
 		app.listen(port, () => console.log(`Server started on ${port}`));
